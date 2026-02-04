@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,16 +11,23 @@ import { User } from './modules/wallet/models/user.model';
 
 @Module({
     imports: [
-        SequelizeModule.forRoot({
-            dialect: 'postgres',
-            host: process.env.DB_HOST || 'localhost',
-            port: parseInt(process.env.DB_PORT || '5432'),
-            username: process.env.DB_USER || 'postgres',
-            password: process.env.DB_PASSWORD || 'postgres',
-            database: process.env.DB_NAME || 'sycamore_wallet',
-            autoLoadModels: true,
-            synchronize: true, // For assessment purposes only
-            models: [User, Wallet, TransactionLog],
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        SequelizeModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: (configService: ConfigService) => ({
+                dialect: 'postgres',
+                host: configService.get<string>('DB_HOST', 'localhost'),
+                port: configService.get<number>('DB_PORT', 5432),
+                username: configService.get<string>('DB_USER', 'postgres'),
+                password: configService.get<string>('DB_PASSWORD', 'postgres'),
+                database: configService.get<string>('DB_NAME', 'sycamore_wallet'),
+                autoLoadModels: true,
+                synchronize: true, // For assessment purposes only
+                models: [User, Wallet, TransactionLog],
+            }),
+            inject: [ConfigService],
         }),
         WalletModule,
         InterestModule,
