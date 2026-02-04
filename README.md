@@ -60,18 +60,39 @@ I would first profile the request to identify the bottleneck (database, network,
 
 ### Prerequisites
 - Node.js (v18+)
-- npm
+- Docker & Docker Compose
 
-### Installation
+### Fast Start with Docker (Recommended)
+You can run the entire application stack (API + PostgreSQL) with a single command:
 ```bash
-npm install
+docker-compose up --build
 ```
+- API: `http://localhost:3000`
+- Swagger UI: `http://localhost:3000/api`
 
-### Run the App
-```bash
-# development
-npm run start:dev
-```
+### Local Setup (Manual)
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
+
+2. **Environment Configuration**
+   Create a `.env` file in the root directory:
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   DB_USER=postgres
+   DB_PASSWORD=postgres
+   DB_NAME=sycamore_wallet
+   ```
+
+3. **Start Database**
+   Ensure you have a PostgreSQL instance running locally matching the `.env` credentials.
+
+4. **Run the App**
+   ```bash
+   npm run start:dev
+   ```
 The API will be available at `http://localhost:3000`.
 Visit `http://localhost:3000/api` for the **Swagger UI** documentation.
 
