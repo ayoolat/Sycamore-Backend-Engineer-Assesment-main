@@ -29,6 +29,7 @@ import { User } from './modules/wallet/models/user.model';
             }),
             inject: [ConfigService],
         }),
+        SequelizeModule.forFeature([User, Wallet]),
         WalletModule,
         InterestModule,
     ],
